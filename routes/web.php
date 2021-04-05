@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\CoordinatorController;
+use App\Http\Middleware\EnsureIsCoordinator;
+use App\Http\Middleware\EnsureIsCr;
+use App\Http\Middleware\EnsureIsStudent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -14,21 +18,69 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::middleware([EnsureIsCoordinator::class])->group(function () {
+
+    Route::get('/coordinatorhome',function(){
+        return view('coordinatorhome');
+    });
+
+    Route::get('AppointCr',[CoordinatorController::class,'AppointCr'])->name('AppointCr');
+
+    Route::get('getCrData',[CoordinatorController::class,'getCrData'])->name('getCrData');
+
+    Route::get('UpdateCr/{id}',[CoordinatorController::class,'UpdateCr'])->name('UpdateCr');
+
+    Route::get('RemoveCr/{id}',[CoordinatorController::class,'RemoveCr'])->name('RemoveCr');
+
+    Route::get('coordinatorhome',[CoordinatorController::class,'statistic'])->name('statistic');
+
+    Route::get('editDetails/{id}',[CoordinatorController::class,'editDetails'])->name('EditUser');
+
+    Route::post('editDetails',[CoordinatorController::class,'UpdateDetails'])->name('UpdateUser');
+
+    Route::get('PostNotificationView',[CoordinatorController::class,'PostNotificationView'])->name('post_notification_view');
+
+    Route::post('PostNotification',[CoordinatorController::class,'PostNotification'])->name('post_notification');
+
+    Route::get('ClassResechedule',[CoordinatorController::class,'ViewClassReschedule'])->name('View_ClassReschedule');
+
+    Route::post('ClassResechedule',[CoordinatorController::class,'ClassReschedule'])->name('ClassReschedule');
+
+    Route::get('ViewSechedule',[CoordinatorController::class,'ViewSechedule'])->name('View_schedule');
+
+    Route::get('DeleteSchedule/{id}',[CoordinatorController::class,'DeleteSchedule'])->name('Delete_Schedule');
+
+    });
+
+
+
+
+    Route::middleware([EnsureIsStudent::class])->group(function () {
+        Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    });
+
+
+    Route::middleware([EnsureIsCr::class])->group(function () {
+        Route::get('/crhome',function(){
+            return view('crhome');
+        });
+
+    });
+
+
+
 Route::get('/', function () {
     return view('front');
 });
-Route::get('/studenthome',function(){
-    return view('student_home');
-});
-Route::get('/coordinatorhome',function(){
-    return view('coordinatorhome');
-});
+
+
+
 Route::get('/coordinatorlogin',function(){
     return view('auth.cologin');
 })->name('coordinatelogin');
-Route::get('/crhome',function(){
-    return view('crhome');
-});
+
+
 Route::view('crconsole', 'front');
 Route::view('student_login', 'student_login');
 Route::view('student_register', 'student_register')->name('student.register');
@@ -38,4 +90,6 @@ Route::view('coordinator_registration','auth.coregister');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::view('test', 'test');
+

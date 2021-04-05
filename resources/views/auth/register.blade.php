@@ -101,8 +101,15 @@
                         <div id="error" class=" text-danger"></div>
                     </div>
                     <div class=" form-group">
+                        <label>Select Section</label>
+                        <select name="section" class="form-group col-12">
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                        </select>
 
-                        <input type="text" class=" form-control" name="section" placeholder="Enter your section...">
                     </div>
                     <div class=" form-group">
                         <select class=" form-control" name="semester">
@@ -117,7 +124,7 @@
                             <option value="9th">9th</option>
                             <option value="10th">10th</option>
                             <option value="11th">11th</option>
-                            <option value="12th">1st</option>
+                            <option value="12th">12th</option>
                         </select>
                     </div>
                     <div class=" form-group">

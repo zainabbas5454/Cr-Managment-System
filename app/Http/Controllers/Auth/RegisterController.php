@@ -33,12 +33,12 @@ class RegisterController extends Controller
     protected function redirectTo()
     {
         if (auth()->user()->role->name == 'student') {
-            return '/studenthome';
+            return '/home';
         }
         elseif(auth()->user()->role->name=='coordinator'){
             return '/coordinatorhome';
         }
-        return '/home';
+        //return '/home';
     }
 
     /**
