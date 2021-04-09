@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class CoordinatorController extends Controller
 {
+    
     public function AppointCr()
     {
         return view('coordinator.AppointCr');
@@ -135,15 +136,22 @@ class CoordinatorController extends Controller
             'image' => 'image|mimes:jpeg,png,jpg,svg'
         ]);
         $image=$req->file('image');
-        $imageName = time().'.'.$image->extension();
-        $image->move(public_path('NotificationImages'),$imageName);
-
-
+        if($image!=null)
+        {
+            $imageName = time().'.'.$image->extension();
+            $image->move(public_path('NotificationImages'),$imageName);
+        }
         $data = new CoordinatorNotification;
         $data->code = $req->code;
         $data->subject = $req->subject;
         $data->description = $req->description;
-        $data->image = $imageName;
+        if($image==null){
+            $data->image = null;
+        }
+        else{
+            $data->image = $imageName;
+        }
+
         $data->save();
 
         return redirect(route('post_notification_view'))->with(['success'=>'Notification Delivered']);
@@ -182,7 +190,7 @@ class CoordinatorController extends Controller
 
     public function DeleteSchedule($id)
     {
-        
+
         $data = ClassRearrange::find($id)->delete();
         return redirect(route('View_schedule'))->with(['success'=>'Record Deleted Successfully']);
     }
