@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CoordinatorController;
+use App\Http\Controllers\CrController;
 use App\Http\Middleware\EnsureIsCoordinator;
 use App\Http\Middleware\EnsureIsCr;
 use App\Http\Middleware\EnsureIsStudent;
@@ -69,6 +70,8 @@ Route::middleware([EnsureIsCoordinator::class])->group(function () {
 
     Route::middleware([EnsureIsStudent::class])->group(function () {
         Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
     });
 
 
@@ -76,6 +79,10 @@ Route::middleware([EnsureIsCoordinator::class])->group(function () {
         Route::get('/crhome',function(){
             return view('crhome');
         });
+
+        Route::get('ViewCourseRegistration',[CrController::class,'ViewCourseRegistration'])->name('ViewCourseRegistration');
+
+        Route::get('Course Registration',[CrController::class,'CourseRegistration'])->name('Course_Registration');
 
     });
 
