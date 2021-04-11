@@ -40,6 +40,7 @@
 						<img src="./css/studentdark.png" class="img-fluid">
 					</span>
                 </div>
+               
                 <h3 class=" text-center my-3">Register</h3>
                 <hr>
                 <form method="POST" action="{{ route('register') }}" class="p-3">
@@ -80,7 +81,7 @@
                         </div>
                     <div class=" form-group">
 
-                        <input type="text" class=" form-control" name="name" placeholder="Enter your name...">
+                        <input type="text" class=" form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" placeholder="Enter your name...">
                         @if($errors->has('name'))
                         <p class=" text-danger">
                             {{$errors->first('name')}}
@@ -89,7 +90,12 @@
                     </div>
                     <div class=" form-group">
 
-                        <input type="email" class=" form-control" name="email" placeholder="Enter your email...">
+                        <input type="email" class=" form-control  @error('email') is-invalid @enderror" name="email" placeholder="Enter your email...">
+                        @error('email')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                     </div>
                     <div class=" form-group">
 

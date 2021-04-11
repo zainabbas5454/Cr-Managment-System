@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClassRearrange;
 use App\Models\User;
+use App\Models\Course;
 use Illuminate\Http\Request;
+use App\Models\ClassRearrange;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\CoordinatorNotification;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class CoordinatorController extends Controller
 {
-    
+
     public function AppointCr()
     {
         return view('coordinator.AppointCr');
@@ -20,6 +21,7 @@ class CoordinatorController extends Controller
 
     public function getCrData(Request $req)
     {
+
         //dd($req->all());
         $department = $req->department;
 
@@ -43,7 +45,7 @@ class CoordinatorController extends Controller
         $data = User::find($id);
         $data->role_id = 1;
         $data->save();
-        return Redirect::back()->with('success','Operation done successfully');
+        return Redirect::back()->with('message','Operation done successfully');
 
 
     }
@@ -54,7 +56,7 @@ class CoordinatorController extends Controller
         $data = User::find($id);
         $data->role_id = 3;
         $data->save();
-        return Redirect::back()->with('success','Operation done successfully');
+        return Redirect::back()->with('message','Operation done successfully');
 
 
     }
@@ -116,7 +118,7 @@ class CoordinatorController extends Controller
         $data->department = $req->department;
 
         $data->save();
-        $req->session()->flash('success','Student Record Updated Successfully');
+        $req->session()->flash('message','Student Record Updated Successfully');
         return  Redirect::route('getCrData');
 
     }
@@ -154,7 +156,7 @@ class CoordinatorController extends Controller
 
         $data->save();
 
-        return redirect(route('post_notification_view'))->with(['success'=>'Notification Delivered']);
+        return redirect(route('post_notification_view'))->with(['message'=>'Notification Delivered']);
     }
 
     public function ViewClassReschedule()
@@ -175,7 +177,7 @@ class CoordinatorController extends Controller
         $data->slot = $req->slot;
         $data->date = $date;
         $data->save();
-        return redirect(route('View_ClassReschedule'))->with(['success'=>'Rescheduling Data Added Successfully']);
+        return redirect(route('View_ClassReschedule'))->with(['message'=>'Rescheduling Data Added Successfully']);
         //dd($req->all(),$date);
     }
 
@@ -192,14 +194,73 @@ class CoordinatorController extends Controller
     {
 
         $data = ClassRearrange::find($id)->delete();
-        return redirect(route('View_schedule'))->with(['success'=>'Record Deleted Successfully']);
+        return redirect(route('View_schedule'))->with(['message'=>'Record Deleted Successfully']);
+    }
+
+    public function ViewCourse()
+    {
+        return view('coordinator.courses');
+    }
+
+    public function PostCourse(Request $req)
+    {
+        //dd($req->all());
+
+        $req->validate([
+            'course_code' => 'required ',
+            'course_name' => 'required | string',
+
+        ]);
+
+        Course::create([
+            'code' => $req->course_code,
+            'name' => $req->course_name,
+            'department' => $req->department
+        ]);
+
+
+
+        //dd($notification);
+
+        return Redirect::back()->with('message','Course Added Successfully');
+
+
+    }
+
+    public function ShowCourse()
+    {
+
+        $data = DB::table('courses')->get();
+
+       $item= $data->groupBy('department');
+
+      $zero=$data->where('isActive','=',0);
+      $one=$data->where('isActive','=',1);
+       // dd($zero,$one);
+
+       return view('coordinator.ShowCourse',compact('item','zero','one'));
     }
 
 
+    public function CloseRegistration(Request $req)
+    {
+        $data = DB::table('courses')->update(['isActive'=>0]);
 
+        return Redirect::back()->with('message','Course Registration Closed Successfully');
+    }
 
+    public function OpenRegistration(Request $req)
+    {
+        $data = DB::table('courses')->update(['isActive'=>1]);
 
+        return Redirect::back()->with('message','Course Registration Opened Successfully');
+    }
 
+    public function DeleteCourse($id)
+    {
+       Course::find($id)->delete();
+       return Redirect::back()->with('message','Course Deleted Successfully');
+    }
 
 }
 

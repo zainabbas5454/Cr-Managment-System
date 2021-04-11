@@ -51,6 +51,17 @@ Route::middleware([EnsureIsCoordinator::class])->group(function () {
 
     Route::get('DeleteSchedule/{id}',[CoordinatorController::class,'DeleteSchedule'])->name('Delete_Schedule');
 
+    Route::get('Course',[CoordinatorController::class,'ViewCourse'])->name('View_Course');
+
+    Route::post('PostCourse',[CoordinatorController::class,'PostCourse'])->name('PostCourse');
+
+    Route::get('Courses',[CoordinatorController::class,'ShowCourse'])->name('Show_Course');
+
+    Route::get('CloseRegistration',[CoordinatorController::class, 'CloseRegistration'])->name('Close_Registration');
+
+    Route::get('OpenRegistration',[CoordinatorController::class, 'OpenRegistration'])->name('Open_Registration');
+
+    Route::get('DeleteCourse/{id}',[CoordinatorController::class,'DeleteCourse'])->name('Delete_Course');
     });
 
 
