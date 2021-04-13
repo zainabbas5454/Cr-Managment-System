@@ -82,7 +82,14 @@ Route::middleware([EnsureIsCoordinator::class])->group(function () {
 
         Route::get('ViewCourseRegistration',[CrController::class,'ViewCourseRegistration'])->name('ViewCourseRegistration');
 
-        Route::get('Course Registration',[CrController::class,'CourseRegistration'])->name('Course_Registration');
+        Route::get('CourseRegistration',[CrController::class,'CourseRegistration'])->name('Course_Registration');
+
+        Route::get('Registration/{id}',[CrController::class,'ViewRegistration'])->name('ViewRegistration');
+
+        Route::post('PostRegistration',[CrController::class,'PostRegistration'])->name('PostRegistration');
+
+        Route::get('crhome',[CrController::class,'RegisteredCourses'])->name('RegisteredCourses');
+
 
     });
 
