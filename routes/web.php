@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::middleware([EnsureIsCoordinator::class])->group(function () {
+Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
 
     Route::get('/coordinatorhome',function(){
         return view('coordinatorhome');
@@ -75,7 +75,7 @@ Route::middleware([EnsureIsCoordinator::class])->group(function () {
     });
 
 
-    Route::middleware([EnsureIsCr::class])->group(function () {
+    Route::middleware([EnsureIsCr::class , 'auth'])->group(function () {
         Route::get('/crhome',function(){
             return view('crhome');
         });
@@ -90,7 +90,15 @@ Route::middleware([EnsureIsCoordinator::class])->group(function () {
 
         Route::get('crhome',[CrController::class,'RegisteredCourses'])->name('RegisteredCourses');
 
+        Route::get('RegisterDelete/{id}',[CrController::class,'RegisterDelete'])->name('RegisterDelete');
 
+        Route::get('ViewCourseContent/{id}',[CrController::class,'viewCourseContent'])->name('viewCourseContent');
+
+        Route::post('PostCourseContent',[CrController::class,'PostCourseContent'])->name('PostCourseContent');
+
+        Route::get('viewPostNotification/{id}',[CrController::class,'viewPostNotification'])->name('viewPostNotification');
+
+        Route::post('CRPostNotification',[CrController::class,'PostNotification'])->name('PostNotification');
     });
 
 

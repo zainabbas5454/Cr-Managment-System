@@ -30,7 +30,7 @@
                 <td>{{$item->name}}</td>
 
                 <td>{{$item->department}}</td>
-                <td colspan="2"><a class="btn btn-primary btn-sm mr-3" href="{{route('ViewRegistration',$item->id)}}">Register</a>
+                <td colspan="2"><a class="btn btn-primary btn-sm mr-3" href="{{route('ViewRegistration',$item->id)}}">Register</a></td>
             </tr>
         </tbody>
         @endforeach

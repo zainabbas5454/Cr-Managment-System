@@ -4,8 +4,10 @@
 <form action="{{route('PostRegistration')}}" method="POST">
     @csrf
     <input type="hidden" name="course_id" value="{{$cid}}">
-    <button type="submit" class="btn btn-primary">OK</button>
-    <a class="btn btn-danger" href="{{route('Course_Registration')}}">Cancel</a>
+    <div class="d-flex justify-content-center">
+    <button type="submit" style="margin:10px;" class="btn btn-primary">OK</button>
+    <a class="btn btn-danger" style="margin:10px;"  href="{{route('Course_Registration')}}">Cancel</a>
+</div>
 </form>
 
 

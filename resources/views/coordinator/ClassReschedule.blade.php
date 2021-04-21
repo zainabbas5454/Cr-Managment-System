@@ -20,7 +20,7 @@ Class Resechedule
     </div>
     @endforeach
     @endif
-    <div class="card">
+    <div class="card"  style=" box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
         <div class="card-header">
           Class Reschedule
         </div>

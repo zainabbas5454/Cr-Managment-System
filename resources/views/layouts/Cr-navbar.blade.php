@@ -213,7 +213,7 @@
 
           <!-- content-wrapper ends -->
           <!-- partial:partials/_footer.html -->
-          <footer class="footer fixed-bottom">
+          <footer class="footer fixed-bottom mt-5">
             <div class="container-fluid clearfix">
               <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">COMSATS UNIVERSITY WAH CAMPUS © Copyrights</span>
             </div>

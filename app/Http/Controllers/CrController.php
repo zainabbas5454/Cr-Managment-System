@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\CourseContent;
+use App\Models\CourseNotification;
 use Illuminate\Http\Request;
 use App\Models\CourseRegistration;
 use Illuminate\Support\Facades\DB;
@@ -65,10 +67,10 @@ class CrController extends Controller
         $result=DB::table('course_registrations AS cr')
         ->join('users AS u', 'u.id' , '=', 'cr.user_id')
         ->join('courses AS c', 'c.id', '=', 'cr.course_id')
-        ->select('c.name','u.id','c.code')
+        ->select('*')
         ->where('u.id','=',$user)
         ->get();
-       // dd($result);
+      //  dd($result);
 
        $isActive = DB::table('courses')
        ->where('isActive','=',1)->get();
@@ -76,6 +78,134 @@ class CrController extends Controller
         return view('crhome',compact('result','isActive'));
     }
 
+    public function RegisterDelete($id)
+    {
+      //  dd($id);
+       $data= DB::table('course_registrations')
+                    ->where('course_id','=',$id)->delete();
+        if($data)
+        {
+            return Redirect::back()->with('message','Course Registration Deleted Successfully');
+        }
+
+        else
+        {
+            return Redirect::back()->with('error','Something Went wrong');
+        }
+
+    }
+
+    public function viewCourseContent($id)
+    {
+        //dd($id);
+        return view('CR.CourseContent',compact('id'));
+    }
+
+    public function PostCourseContent(Request $req)
+    {
+        $req->validate([
+            'slides' => 'mimes:pdf,ppt, pptx',
+            'notes' => 'mimes:pdf,docx,doc',
+            'book' => 'mimes:pdf,docx,doc',
+            'image' => 'mimes:jpeg,png, jpg'
+        ]);
+        //dd($req->all());
+
+        $semester = Auth::user()->semester;
+        $section = Auth::user()->section;
+        $department = Auth::user()->department;
+
+        //dd($semester,$section,   $department);
+
+        //Adding Data to Database
+
+        $data = new CourseContent();
+
+        $slides=$req->file('slides');
+        if($slides!=null){
+        $slideName = time().'.'.$slides->extension();
+        $slides->move(public_path('Slides'),$slideName);
+    }
+
+        $notes=$req->file('notes');
+        if($notes!=null){
+            $notesName = time().'.'.$notes->extension();
+        $notes->move(public_path('Notes'),$notesName);
+
+        }
+
+        $books=$req->file('book');
+        if($books!=null)
+        {
+            $booksName = time().'.'.$books->extension();
+            $books->move(public_path('Books'),$booksName);
+        }
+
+
+        $image=$req->file('image');
+        if($image!=null)
+        {
+            $imageName = time().'.'.$image->extension();
+            $image->move(public_path('CourseImages'),$imageName);
+
+        }
+
+
+
+        //dd($slides,$notes,$books,$image);
+        $data->slides = $slides;
+        $data->notes = $notes;
+        $data->books = $books;
+        $data->image = $image;
+        $data->semester = $semester;
+        $data->section = $section;
+        $data->department = $department;
+        $data->course_id = $req->course_id;
+
+        $data->save();
+        return Redirect::back()->with('success',"Course Contents Has been Uploaded");
+    }
+
+    public function viewPostNotification($id)
+    {
+       //dd($id);
+        return view('CR.PostNotification',compact('id'));
+    }
+
+    public function PostNotification(Request $req)
+    {
+        $req->validate([
+            'code' => 'required',
+            'subject' => 'required|string',
+            'description' => 'required|string',
+            'file' => 'mimes:pdf,jpg,jpeg,png'
+        ]);
+            $file = $req->file('file');
+            if($file!=null)
+            {
+                $fileName = time().'.'.$file->extension();
+                $file->move(public_path('CourseNotificationFiles'),$fileName);
+            }
+           // dd($file);
+        $data = new CourseNotification();
+        $data->code = $req->code;
+        $data->subject = $req->subject;
+        $data->description = $req->description;
+        $data->file = $file;
+        $data->course_id = $req->course_id;
+
+        $check = $data->save();
+
+        if($check)
+        {
+            return Redirect::back()->with('success','Notification has been delivered to class');
+        }
+
+        else
+        {
+            return Redirect::back()->with('error','Something went wrong! Please try again');
+        }
+    }
 
 
 
