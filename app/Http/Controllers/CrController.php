@@ -125,7 +125,7 @@ class CrController extends Controller
         if($slides!=null){
         $slideName = time().'.'.$slides->extension();
         $slides->move(public_path('Slides'),$slideName);
-    }
+        }
 
         $notes=$req->file('notes');
         if($notes!=null){
@@ -153,10 +153,42 @@ class CrController extends Controller
 
 
         //dd($slides,$notes,$books,$image);
-        $data->slides = $slides;
-        $data->notes = $notes;
-        $data->books = $books;
-        $data->image = $image;
+        if($slides == null)
+        {
+            $data->slides = null;
+        }
+        else
+        {
+            $data->slides = $slideName;
+        }
+
+        if($notes == null)
+        {
+            $data->notes = null;
+        }
+        else{
+            $data->notes = $notesName;
+        }
+
+        if($books == null)
+        {
+            $data->books = null;
+        }
+        else
+        {
+            $data->books = $booksName;
+        }
+
+        if($image == null)
+        {
+            $data->image = null;
+        }
+        else
+        {
+            $data->image = $imageName;
+        }
+
+
         $data->semester = $semester;
         $data->section = $section;
         $data->department = $department;
@@ -205,6 +237,13 @@ class CrController extends Controller
         {
             return Redirect::back()->with('error','Something went wrong! Please try again');
         }
+
+    }
+
+    public function test()
+    {
+        $data = DB::table('course_contents')->get();
+        return view('CR.test',compact('data'));
     }
 
 

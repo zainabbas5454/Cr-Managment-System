@@ -101,7 +101,7 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
         Route::post('CRPostNotification',[CrController::class,'PostNotification'])->name('PostNotification');
     });
 
-
+Route::get('test',[CrController::class,'test']);
 
 Route::get('/', function () {
     return view('front');
@@ -123,6 +123,4 @@ Route::view('coordinator_registration','auth.coregister');
 
 Auth::routes();
 
-
-Route::view('test', 'test');
 
