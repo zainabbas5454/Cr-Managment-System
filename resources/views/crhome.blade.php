@@ -37,7 +37,7 @@
 
                         @endif
 
-                        <td><a class="btn btn-primary btn-sm mr-2" href="{{route('viewCourseContent',$item->course_id)}}">Add Content</a><a class="btn btn-primary btn-sm mr-2" href="{{route('viewPostNotification',$item->course_id)}}">Post Notification</a><a class="btn btn-primary btn-sm" href="">Upload Marks List</a></td>
+                        <td><a class="btn btn-primary btn-sm mr-2" href="{{route('viewCourseContent',$item->course_id)}}">Add Content</a><a class="btn btn-primary btn-sm mr-2" href="{{route('viewPostNotification',$item->course_id)}}">Post Notification</a><a class="btn btn-primary btn-sm" href="{{route('ViewMarksList',$item->course_id)}}">Upload Marks List</a></td>
 
 
 

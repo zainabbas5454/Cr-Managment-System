@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CoordinatorNotification;
 use App\Models\Course;
+use App\Models\CourseMarks;
+use Illuminate\Http\Request;
 use App\Models\CourseContent;
 use App\Models\CourseNotification;
-use Illuminate\Http\Request;
 use App\Models\CourseRegistration;
+use App\Models\CrToClass;
+use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
+use Symfony\Component\HttpFoundation\File\File;
 //query for retrieving data
 //SELECT users.name, courses.name from users JOIN course_registrations JOIN courses WHERE users.id=course_registrations.user_id AND courses.id=course_registrations.course_id
 
@@ -240,11 +246,129 @@ class CrController extends Controller
 
     }
 
-    public function test()
+    // public function test()
+    // {
+    //     $data = DB::table('course_contents')->get();
+    //     return view('CR.test',compact('data'));
+    // }
+
+    public function ViewMarksList($id)
     {
-        $data = DB::table('course_contents')->get();
-        return view('CR.test',compact('data'));
+        //dd($id);
+       //$res =  Gate::authorize('Marks',[$id]);
+     // dd($res);
+        return view('CR.MarksList',compact('id'));
     }
+
+    public function PostList(Request $req)
+    {
+        $req->validate([
+            'list' => 'required|mimes:xlsx'
+        ]);
+        $semester = Auth::user()->semester;
+        $section = Auth::user()->section;
+        $department = Auth::user()->department;
+
+
+
+        $data = new CourseMarks();
+
+        $file=$req->file('list');
+       // dd($file);
+
+        $fileName = time().'.'.$file->extension();
+
+        $file->move(public_path('MarksLists'),$fileName);
+        $data->marks_list = $fileName;
+        $data->semester = $semester;
+        $data->section = $section;
+        $data->department = $department;
+        $data->course_id = $req->course_id;
+        $data->save();
+        return Redirect::back()->with('success','Sheets has successfully been uploaded');
+
+
+    }
+
+    public function ViewNotificationFromCoordinator()
+    {
+       $data = CoordinatorNotification::orderBy('created_at','DESC')->paginate(1);
+       //dd($data);
+        $unread = DB::table('coordinator_notifications')
+                        ->where('isRead','=',1)
+                        ->get();
+        //dd($read);
+        $read = DB::table('coordinator_notifications')
+        ->where('isRead','=',0)
+        ->get();
+        return view('CR.NotificationFromCoordinator',compact('data','read','unread'));
+    }
+
+    public function DownloadImage($image)
+    {
+       // dd($image);
+        $image = CoordinatorNotification::where('image', $image)->firstOrFail();
+       //dd($image->mime);
+        $path = public_path('NotificationImages/'.$image->image);
+        $headers = ['Content-Type:mime'];
+        $filename = $image->image;
+       // dd($path);
+        // if (file_exists(public_path('NotificationImages/1619192509.png'))) {
+        //     dd('File is Exists ');
+        //   }else{
+        //      dd('File is Not Exists');
+        //   }
+        return response()->download($path,$filename, $headers);
+//    $path = public_path(). '/NotificationImages/'. $image->$image;
+//    dd($path);
+//   return response()->download($path, $image
+//              ->original_filename, ['Content-Type' => $image->mime]);
+     }
+
+     public function ViewClassNotification()
+     {
+         return view('CR.ClassNotification');
+     }
+
+     public function PostClassNotification(Request $req)
+     {
+        //dd($req->all());
+        $req->validate([
+            'subject' => 'required|alpha',
+            'description' => 'required|alpha',
+
+        ]);
+        $data = new CrToClass();
+        $data->subject = $req->subject;
+        $data->description = $req->description;
+        $data->department = Auth::user()->department;
+        $data->section = Auth::user()->section;
+        $data->semester = Auth::user()->semester;
+            $check = $data->save();
+            if($check)
+            {
+                return Redirect::back()->with('success','Notification has been delivered');
+            }
+            else
+            {
+                return Redirect::back()->with('error','Something Went Wrong');
+            }
+
+     }
+
+     public function MarkAsRead($id)
+     {
+         //dd($id);
+         $data = CoordinatorNotification::find($id);
+         $data->isRead = 0;
+         $data->save();
+         return Redirect::back()->with('success','Notification Mark As Read');
+     }
+
+
+
+
+
 
 
 

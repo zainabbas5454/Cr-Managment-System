@@ -99,6 +99,20 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
         Route::get('viewPostNotification/{id}',[CrController::class,'viewPostNotification'])->name('viewPostNotification');
 
         Route::post('CRPostNotification',[CrController::class,'PostNotification'])->name('PostNotification');
+
+        Route::get('ViewMarksList/{id}',[CrController::class,'ViewMarksList'])->name('ViewMarksList');
+
+        Route::post('PostList',[CrController::class,'PostList'])->name('PostList');
+
+        Route::get('ViewNotification',[CrController::class,'ViewNotificationFromCoordinator'])->name('notifications');
+
+        Route::get('DownloadImage/{image}',[CrController::class,'DownloadImage'])->name('DownloadImage');
+
+        Route::get('ClassNotification',[CrController::class,'ViewClassNotification'])->name('ViewClassNotification');
+
+        Route::post('PostClassNotification',[CrController::class,'PostClassNotification'])->name('PostClassNotification');
+
+        Route::get('MarkAsRead/{id}',[CrController::class,'MarkAsRead'])->name('MarkAsRead');
     });
 
 Route::get('test',[CrController::class,'test']);
