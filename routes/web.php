@@ -113,6 +113,16 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
 
         Route::get('DownloadList/{list}',[StudentController::class,'Download_List'])->name('Download_List');
 
+        Route::get('ViewCRNotification',[StudentController::class,'View_Cr_Notification'])->name('View_Cr_Notification');
+
+        Route::get('SendMessage',[StudentController::class,'Send_Message_to_Cr'])->name('Send_Message_to_Cr');
+
+        Route::post('SendMessage',[StudentController::class,'PostMessage'])->name('PostMessage');
+
+        Route::get('GetReplyFromCr',[StudentController::class,'getReplyFromCr'])->name('getReplyFromCr');
+
+        Route::get('DeleteMsgFromCR/{id}',[StudentController::class,'DeleteMsgFromCR'])->name('DeleteMsgFromCR');
+
 
 
     });
@@ -164,6 +174,14 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
         Route::get('ViewCoordinatorToCr',[CrController::class,'ViewCoordinatorToCr'])->name('ViewCoordinatorToCr');
 
         Route::get('DeleteMsgFromCoordinator/{id}',[CrController::class,'DeleteMsgFromCoordinator'])->name('DeleteMsgFromCoordinator');
+
+        Route::get('MessageFROMStudent',[CrController::class,'getStudentMessage'])->name('getStudentMessage');
+
+        Route::get('ReplyToStudent/{regno}',[CrController::class,'ReplyToStudent'])->name('ReplyToStudent');
+
+        Route::post('PostReplyToStudent',[CrController::class,'PostReplyToStudent'])->name('PostReplyToStudent');
+
+        Route::get('deleteStudentMessage/{id}',[CrController::class,'deleteStudentMessage'])->name('deleteStudentMessage');
     });
 
 Route::get('test',[CrController::class,'test']);

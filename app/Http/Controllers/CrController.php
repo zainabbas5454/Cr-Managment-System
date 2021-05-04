@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Gate;
 use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\CoordinatorNotification;
+use App\Models\CrToStudent;
+use App\Models\StudentToCr;
 use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpFoundation\File\File;
 //query for retrieving data
@@ -439,6 +441,64 @@ class CrController extends Controller
              return Redirect::back()->with('error','Something Went Wrong!');
          }
      }
+
+     public function getStudentMessage()
+     {
+         $data = StudentToCr::where('section',Auth::user()->section)
+                            ->where('department',Auth::user()->department)
+                            ->where('semester',Auth::user()->semester)
+                            ->paginate(5);
+        //dd($data);
+
+        return view('CR.GetMessage',compact('data'));
+     }
+
+     public function ReplyToStudent($reg_no)
+     {
+         //dd($reg_no);
+         return view('CR.ReplyToStudent',compact('reg_no'));
+     }
+
+     public function PostReplyToStudent(Request $req)
+     {
+       // dd($req->all());
+       $req->validate([
+           'subject' => 'required',
+           'description' => 'required'
+       ]);
+       $data = new CrToStudent();
+       $data->subject = $req->subject;
+       $data->description = $req->description;
+       $data->semester = Auth::user()->semester;
+       $data->department = Auth::user()->department;
+       $data->reg_no = $req->reg_no;
+       $data->section = Auth::user()->section;
+       $check = $data->save();
+       if($check)
+       {
+           return Redirect::back()->with('success','Reply Successfully sent to '.$req->reg_no);
+       }
+       else
+       {
+           return Redirect::back()->with('error','Something Went Wrong! Try Again Later');
+       }
+     }
+
+     public function deleteStudentMessage($id)
+     {
+
+        // dd($id);
+        $data = StudentToCr::find($id)->delete();
+        if($data)
+        {
+            return Redirect::back()->with('success',"Message Deleted Successfully");
+        }
+        else
+        {
+            return Redirect::back()->with('error','Something Went Wrong');
+        }
+     }
+
 
 
 

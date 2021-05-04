@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\CrToClass;
+use App\Models\CourseMarks;
 use Illuminate\Http\Request;
 use App\Models\CourseContent;
-use App\Models\CourseMarks;
 use App\Models\CourseNotification;
 use App\Models\CourseRegistration;
+use App\Models\CrToStudent;
+use App\Models\StudentToCr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -222,5 +225,75 @@ class StudentController extends Controller
         $headers = ['Content-Type:mime'];
         $filename = $data->file;
         return response()->download($path,$filename, $headers);
+    }
+
+    public function View_Cr_Notification()
+    {
+        $data = CrToClass::where('department',Auth::user()->department)
+                        ->where('section',Auth::user()->section)
+                        ->where('semester',Auth::user()->semester)
+                        ->orderBy('created_at','DESC')
+                        ->paginate(1);
+
+        //dd($data);
+
+        return view('Student.View_Cr_Notification',compact('data'));
+    }
+
+    public function Send_Message_to_Cr()
+    {
+        return view('Student.SendMessage');
+    }
+
+    public function PostMessage(Request $req)
+    {
+        //dd($req->all());
+        $data = new StudentToCr();
+        $data->subject = $req->subject;
+        $data->description = $req->description;
+        $data->semester = Auth::user()->semester;
+        $data->section = Auth::user()->section;
+        $data->department = Auth::user()->department;
+        $data->reg_no = Auth::user()->regno;
+
+        $check = $data->save();
+
+        if($check)
+        {
+            return Redirect::back()->with('success','Message Has Been Sent');
+
+        }
+        else
+        {
+            return Redirect::back()->with('error','Something Went Wrong');
+        }
+
+    }
+
+    public function getReplyFromCr()
+    {
+        $data = CrToStudent::where('section',Auth::user()->section)
+                            ->where('department',Auth::user()->department)
+                            ->where('semester',Auth::user()->semester)
+                            ->where('reg_no',Auth::user()->regno)
+                            ->paginate(1);
+        //dd($data);
+
+        return view('Student.ReplyFromCr',compact('data'));
+    }
+
+    public function DeleteMsgFromCR($id)
+    {
+        $data = CrToStudent::find($id)->delete();
+
+        if($data)
+        {
+            return Redirect::back()->with('success','Message Has Been Deleted');
+        }
+
+        else
+        {
+            return Redirect::back()->with('error','Something Went Wrong! Try Again Later');
+        }
     }
 }

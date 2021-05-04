@@ -173,6 +173,12 @@
 
                 </a>
               </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{{route('getStudentMessage')}}">
+                  <span class="menu-title">View Message From Students</span>
+
+                </a>
+              </li>
             <li class="nav-item">
 
               <div class="collapse" id="ui-basic">

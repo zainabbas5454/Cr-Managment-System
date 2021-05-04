@@ -87,6 +87,20 @@
 
                             </li>
 
+                            <li class="nav-item ">
+                                <a class="nav-link"  href="{{route('View_Cr_Notification')}}"><i class="fas fa-bell"></i>View CR's Notification<span class="badge badge-success">6</span></a>
+
+                            </li>
+
+                            <li class="nav-item ">
+                                <a class="nav-link"  href="{{route('Send_Message_to_Cr')}}"><i class="fas fa-envelope"></i>Send Message to Cr<span class="badge badge-success">6</span></a>
+
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link"  href="{{route('getReplyFromCr')}}"><i class="fas fa-inbox"></i>View Message From Cr<span class="badge badge-success">6</span></a>
+
+                            </li>
+
 
 
 
