@@ -20,7 +20,7 @@
           @if($item->image!=null)
           <h5 class="card-title">Notification File</h5>
 
-          <p class="card-text">{{$item->image}}</p><a href="{{route('DownloadImage',$item->image)}}">Download</a>
+          <p class="card-text">{{$item->image}}</p><a class="btn btn-success" href="{{route('DownloadImage',$item->image)}}">Download file</a>
             @endif
             @if($item->isRead == 1)
             <a class="btn btn-danger" style="float:right;"href="{{route('MarkAsRead',$item->id)}}"> Mark As Read</a>
@@ -28,10 +28,15 @@
 
         </div>
       </div>
-<span>
-    {{$data->links()}}
-</span>
-    @endforeach
 
+    @endforeach
+    <span>
+        {{$data->links()}}
+    </span>
+    <style>
+        .w-5{
+            display: none;
+        }
+    </style>
 
 @endsection

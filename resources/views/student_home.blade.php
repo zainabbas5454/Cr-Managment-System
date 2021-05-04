@@ -1,24 +1,60 @@
-@extends('layouts.app')
+@extends('layouts.student')
+
+
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+    <h1 style="text-align: center">Dashboard</h1>
+    @if(Session::has('message'))
+    <div class="alert alert-success">{{session('message')}}</div>
+    @endif
 
-                <div class="card-body">
-                    Welcome student
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+    @if(Session::has('error'))
+    <div class="alert alert-error">{{session('error')}}</div>
+    @endif
+    <div class="container-fluid">
+    <div class="card" style=" box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
 
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">Course Code</th>
+                        <th style="text-align: center;">Course Name</th>
+                        <th style="">Actions</th>
+
+                    </tr>
+                </thead>
+                @foreach ($result as $item )
+                <tbody>
+                    <tr>
+
+
+                        <td style="text-align: center;">{{$item->code}}</td>
+
+                        <td style="text-align: center;">{{$item->name}}</td>
+
+                        @if($isActive->isNotEmpty())
+                        <td colspan="2"><a class="btn btn-primary btn-sm mr-3" href="{{route('Student_Delete_Registration',$item->course_id)}}">Delete</a>
+                            @else
+                            <td><a class="btn btn-primary btn-sm mr-2 mb-2" href="{{route('View_Content',$item->course_id)}}">View Content</a><a class="btn btn-primary btn-sm mr-2 mb-2" href="{{route('View_Notification',$item->course_id)}}">View Notification</a><a class="btn btn-primary btn-sm mb-2" href="{{route('ViewMarks',$item->course_id)}}">View Marks List</a></td>
+
+                        @endif
+
+
+
+
+
+
+                    </tr>
+                </tbody>
+                @endforeach
+
+            </table>
         </div>
+      </div>
     </div>
-</div>
 @endsection
+
+
+
+

@@ -9,6 +9,8 @@ use App\Models\ClassRearrange;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\CoordinatorNotification;
+use App\Models\CoordinatorToCr;
+use App\Models\CrToCoordinator;
 use Illuminate\Support\Facades\Redirect;
 
 class CoordinatorController extends Controller
@@ -260,6 +262,49 @@ class CoordinatorController extends Controller
     {
        Course::find($id)->delete();
        return Redirect::back()->with('message','Course Deleted Successfully');
+    }
+
+    public function ViewMsgCr()
+    {
+        $data = CrToCoordinator::orderBy('created_at','DESC')->paginate(5);
+        //dd($data);
+        return view('coordinator.ViewMsgCr',compact('data'));
+    }
+
+    public function DeleteMsgCr($id)
+    {
+        $data = CrToCoordinator::find($id)->delete();
+        return Redirect::back()->with('success','Message Deleted Successfully');
+    }
+
+    public function ViewReplyFromCoordinator($reg_no)
+    {
+       // dd($reg_no);
+        return view('coordinator.ReplyToCr',compact('reg_no'));
+    }
+
+    public function ReplyToCr(Request $req)
+    {
+        //dd($req->all());
+        $req->validate([
+            'subject' => 'required|alpha',
+            'description' => 'required|alpha'
+
+        ]);
+
+      $data = new CoordinatorToCr();
+      $data->subject = $req->subject;
+      $data->description = $req->description;
+      $data->reg_no = $req->reg_no;
+      $check = $data->save();
+      if($check)
+      {
+          return Redirect::back()->with('success','Reply Sent to '.$data->reg_no);
+      }
+      else{
+          return Redirect::back()->with('error','Something Went Wrong!');
+      }
+
     }
 
 }

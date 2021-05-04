@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CoordinatorNotification;
 use App\Models\Course;
+use App\Models\CrToClass;
 use App\Models\CourseMarks;
 use Illuminate\Http\Request;
 use App\Models\CourseContent;
+use App\Models\CoordinatorToCr;
+use App\Models\CrToCoordinator;
 use App\Models\CourseNotification;
 use App\Models\CourseRegistration;
-use App\Models\CrToClass;
-use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Facade\FlareClient\Http\Response;
+use Illuminate\Support\Facades\Crypt;
+use App\Models\CoordinatorNotification;
 use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpFoundation\File\File;
 //query for retrieving data
@@ -43,6 +46,10 @@ class CrController extends Controller
 
     public function ViewRegistration($id)
     {
+        //dd($id);
+
+       // dd($data->status);
+
         $cid = $id;
         $name = $name = Course::find($id)->name;
 
@@ -51,12 +58,17 @@ class CrController extends Controller
     }
 
     public function PostRegistration(Request $req)
-    {
+    {  // dd($req->all());
         $data = new CourseRegistration();
+
+
         $data->user_id = Auth::user()->id;
         $data->course_id = $req->course_id;
         $data->status = 1;
+
         $response = $data->save();
+
+        //dd($data->course_id);
         //dd($response);
         return Redirect::route('Course_Registration')->with('message','Course Registered Successfully');
 
@@ -104,6 +116,11 @@ class CrController extends Controller
     public function viewCourseContent($id)
     {
         //dd($id);
+       // dd($response);
+    //    $response=Gate::authorize('view', $id);
+    //    dd($response);
+        //  $id = Crypt::decrypt($id);
+        //  dd($id);
         return view('CR.CourseContent',compact('id'));
     }
 
@@ -229,8 +246,11 @@ class CrController extends Controller
         $data->code = $req->code;
         $data->subject = $req->subject;
         $data->description = $req->description;
-        $data->file = $file;
+        $data->file = $fileName;
         $data->course_id = $req->course_id;
+        $data->semester = Auth::user()->semester;
+        $data->section = Auth::user()->section;
+        $data->department = Auth::user()->department;
 
         $check = $data->save();
 
@@ -363,6 +383,61 @@ class CrController extends Controller
          $data->isRead = 0;
          $data->save();
          return Redirect::back()->with('success','Notification Mark As Read');
+     }
+
+     public function ViewCrToCoordinator()
+     {
+         return view('CR.CoordinatorMessage');
+     }
+
+     public function PostToCoordinator(Request $req)
+     {
+       // dd($req->all());
+
+       $req->validate([
+        'subject' => 'required|alpha',
+        'description' => 'required|alpha'
+       ]);
+
+       $data = new CrToCoordinator();
+       $data->subject = $req->subject;
+       $data->description = $req->description;
+       $data->department = Auth::user()->department;
+       $data->semester = Auth::user()->semester;
+       $data->section = Auth::user()->section;
+       $data->reg_no = Auth::user()->regno;
+
+       $check = $data->save();
+
+       if($check)
+       {
+           return Redirect::back()->with('success','Message successfully sent to Coordinator');
+       }
+       else
+       {
+        return Redirect::back()->with('error','Something Went Wrong');
+       }
+     }
+
+     public function ViewCoordinatorToCr()
+     {
+         $data = CoordinatorToCr::where('reg_no',Auth::user()->regno)->paginate(5);
+         //dd($data);
+         return view('CR.ViewMessageFromCoordinator',compact('data'));
+     }
+
+     public function DeleteMsgFromCoordinator($id)
+     {
+         $data = CoordinatorToCr::find($id)->delete();
+         if($data)
+         {
+             return Redirect::back()->with('success','Message Deleted Successfully');
+
+         }
+         else
+         {
+             return Redirect::back()->with('error','Something Went Wrong!');
+         }
      }
 
 

@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\CrController;
+use App\Http\Controllers\StudentController;
 use App\Http\Middleware\EnsureIsCoordinator;
 use App\Http\Middleware\EnsureIsCr;
 use App\Http\Middleware\EnsureIsStudent;
+use App\Http\Middleware\CourseContent;
+use App\Models\Course;
+use Database\Seeders\CoordinatorSeeder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -63,13 +67,52 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
     Route::get('OpenRegistration',[CoordinatorController::class, 'OpenRegistration'])->name('Open_Registration');
 
     Route::get('DeleteCourse/{id}',[CoordinatorController::class,'DeleteCourse'])->name('Delete_Course');
+
+    Route::get('ViewMsgCr',[CoordinatorController::class,'ViewMsgCr'])->name('ViewMsgCr');
+
+    Route::get('ReplyFromCoordinator/{reg_no}',[CoordinatorController::class,'ViewReplyFromCoordinator'])->name('ReplyFromCoordinator');
+
+    Route::post('ReplyToCr',[CoordinatorController::class,'ReplyToCr'])->name('ReplyToCr');
+
+    Route::get('DeleteMsgCr/{id}',[CoordinatorController::class,'DeleteMsgCr'])->name('DeleteMsgCr');
     });
 
 
 
 
-    Route::middleware([EnsureIsStudent::class])->group(function () {
+    Route::middleware([EnsureIsStudent::class , 'auth'])->group(function () {
         Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+        Route::get('Course_Registration',[StudentController::class,'Student_Course_Registration'])->name('Student_Course_Registration');
+
+        Route::get('Confirm_Registration/{id}',[StudentController::class,'Confim_Registration'])->name('Confirm_Registration');
+
+        Route::post('Student_Post_Registration',[StudentController::class,'Student_Post_Registration'])->name('Student_Post_Registration');
+
+        Route::get('home',[StudentController::class,'Student_Registered_Courses']);
+
+        Route::get('DeleteRegistarion/{id}',[StudentController::class,'Student_Delete_Registration'])->name('Student_Delete_Registration');
+
+        Route::get('ViewContent/{id}',[StudentController::class,'View_Content'])->name('View_Content');
+
+        Route::get('DownloadSlides/{slides}',[StudentController::class,'Download_Slides'])->name('DownloadSlides');
+
+        Route::get('DownloadNotes/{notes}',[StudentController::class,'Download_Notes'])->name('DownloadNotes');
+
+        Route::get('DownloadBooks/{books}',[StudentController::class,'Download_Books'])->name('DownloadBooks');
+
+        Route::get('DownloadImages/{images}',[StudentController::class,'Download_Images'])->name('DownloadImages');
+
+        Route::get('View_Notification/{id}',[StudentController::class,'View_Notification'])->name('View_Notification');
+
+        Route::get('Download_File/{file}',[StudentController::class,'Download_File'])->name('Download_file');
+
+        Route::get('Mark_As_Read/{id}',[StudentController::class,'Mark_As_Read'])->name('Mark_As_Read');
+
+        Route::get('View_Marks/{id}',[StudentController::class,'ViewMarks'])->name('ViewMarks');
+
+        Route::get('DownloadList/{list}',[StudentController::class,'Download_List'])->name('Download_List');
+
 
 
     });
@@ -92,7 +135,7 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
 
         Route::get('RegisterDelete/{id}',[CrController::class,'RegisterDelete'])->name('RegisterDelete');
 
-        Route::get('ViewCourseContent/{id}',[CrController::class,'viewCourseContent'])->name('viewCourseContent');
+        Route::get('ViewCourseContent/{id}',[CrController::class,'viewCourseContent'])->name('viewCourseContent')->middleware('CourseContent');
 
         Route::post('PostCourseContent',[CrController::class,'PostCourseContent'])->name('PostCourseContent');
 
@@ -113,6 +156,14 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
         Route::post('PostClassNotification',[CrController::class,'PostClassNotification'])->name('PostClassNotification');
 
         Route::get('MarkAsRead/{id}',[CrController::class,'MarkAsRead'])->name('MarkAsRead');
+
+        Route::get('CrToCoordinator',[CrController::class,'ViewCrToCoordinator'])->name('ViewCrToCoordinator');
+
+        Route::post('PostToCoordinator',[CrController::class,'PostToCoordinator'])->name('PostToCoordinator');
+
+        Route::get('ViewCoordinatorToCr',[CrController::class,'ViewCoordinatorToCr'])->name('ViewCoordinatorToCr');
+
+        Route::get('DeleteMsgFromCoordinator/{id}',[CrController::class,'DeleteMsgFromCoordinator'])->name('DeleteMsgFromCoordinator');
     });
 
 Route::get('test',[CrController::class,'test']);

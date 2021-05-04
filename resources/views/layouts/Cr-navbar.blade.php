@@ -161,6 +161,18 @@
 
                 </a>
               </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{{route('ViewCrToCoordinator')}}">
+                  <span class="menu-title">Send Message to Coordinator</span>
+
+                </a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{{route('ViewCoordinatorToCr')}}">
+                  <span class="menu-title">View Message From Coordinator</span>
+
+                </a>
+              </li>
             <li class="nav-item">
 
               <div class="collapse" id="ui-basic">
