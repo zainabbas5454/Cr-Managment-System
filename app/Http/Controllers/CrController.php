@@ -40,10 +40,11 @@ class CrController extends Controller
         $isActive = DB::table('courses')
                             ->where('isActive','=',1)->get();
 
-
+        $status=0;
         //dd($course_id);
-
-      return view('CR.CourseRegistration',compact('data','isActive'));
+        // $status=DB::table('course_registrations')->where('user_id','=',Auth::user()->id)
+        //                                          ->where('user_id','=',Auth::user()->id);
+      return view('CR.CourseRegistration',compact('data','isActive','status'));
     }
 
     public function ViewRegistration($id)

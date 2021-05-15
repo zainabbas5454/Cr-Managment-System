@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Course;
 use App\Models\CrToClass;
 use App\Models\CourseMarks;
+use App\Models\CrToStudent;
+use App\Models\StudentToCr;
 use Illuminate\Http\Request;
 use App\Models\CourseContent;
 use App\Models\CourseNotification;
 use App\Models\CourseRegistration;
-use App\Models\CrToStudent;
-use App\Models\StudentToCr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 
 class StudentController extends Controller
@@ -28,8 +30,8 @@ class StudentController extends Controller
 
 
         //dd($course_id);
-
-      return view('Student.CourseRegistration',compact('data','isActive'));
+        $status=0;
+      return view('Student.CourseRegistration',compact('data','isActive','status'));
     }
 
     public function Confim_Registration($id)
@@ -296,4 +298,41 @@ class StudentController extends Controller
             return Redirect::back()->with('error','Something Went Wrong! Try Again Later');
         }
     }
+
+    public function register(Request $data){
+
+        $this->validate($data,[
+
+            'email' => ['required',  'email', 'max:255', 'unique:users'],
+            'password' => ['required','min:8','confirmed'],
+        ]);
+        // dd($data->all());
+        $regno=$data['batch'].'-'.$data['department'].'-'.$data['reg'];
+        $user=[
+
+            'regno'=>$regno,
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'section'=>$data['section'],
+            'semester'=>$data['semester'],
+            'department'=>$data['department'],
+            'role_id'=>$data['role_id'],
+        ];
+        // dd($user);
+        $user_data=User::where('regno','=',$regno)->first();
+
+        // dd($user_data->count()>1);
+        if($user_data !=null){
+            return Redirect::back()->with('regnoerror','This reg no already exists');
+        }
+        else{
+            User::create($user);
+            Auth::attempt($data->only('email','password'));
+            return redirect()->route('home');
+        }
+
+
+
+}
 }

@@ -23,6 +23,22 @@
             </tr>
         </thead>
         @foreach ($data as $item )
+        <?php
+
+
+            $status_data=DB::table('course_registrations')->where('user_id','=',Auth::user()->id)
+                                                ->where('course_id','=',$item->id)->get('status');
+
+             if($status_data->isEmpty()){
+                 $status=0;
+             }
+             else{
+                $status=$status_data->pluck('status')[0];
+             }
+
+
+
+        ?>
         <tbody>
             <tr>
                 <td>{{$item->code}}</td>
@@ -30,7 +46,13 @@
                 <td>{{$item->name}}</td>
 
                 <td>{{$item->department}}</td>
-                <td colspan="2"><a class="btn btn-primary btn-sm mr-3" href="{{route('ViewRegistration',$item->id)}}">Register</a></td>
+                <td colspan="2">
+                    @if($status!=1)
+                    <a class="btn btn-primary btn-sm mr-3" href="{{route('ViewRegistration',$item->id)}}">Register</a>
+                    @else
+                    <span class=" badge badge-success">Registered</span>
+                    @endif
+                </td>
             </tr>
         </tbody>
         @endforeach

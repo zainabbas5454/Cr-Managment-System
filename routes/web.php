@@ -184,7 +184,7 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
         Route::get('deleteStudentMessage/{id}',[CrController::class,'deleteStudentMessage'])->name('deleteStudentMessage');
     });
 
-Route::get('test',[CrController::class,'test']);
+Route::post('registerstudent',[StudentController::class,'register'])->name('registerstudent');
 
 Route::get('/', function () {
     return view('front');
@@ -195,7 +195,6 @@ Route::get('/', function () {
 Route::get('/coordinatorlogin',function(){
     return view('auth.cologin');
 })->name('coordinatelogin');
-
 
 Route::view('crconsole', 'front');
 Route::view('student_login', 'student_login');

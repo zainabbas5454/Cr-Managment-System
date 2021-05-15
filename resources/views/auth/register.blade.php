@@ -40,10 +40,10 @@
 						<img src="./css/studentdark.png" class="img-fluid">
 					</span>
                 </div>
-               
+
                 <h3 class=" text-center my-3">Register</h3>
                 <hr>
-                <form method="POST" action="{{ route('register') }}" class="p-3">
+                <form method="POST" action="{{ route('registerstudent') }}" class="p-3">
                     @csrf
                     <input type="hidden" name="role_id" value="3">
                     <div class="container my-2">
@@ -78,6 +78,11 @@
                                 <input class="form-control" type="text" name="reg" >
                             </div>
                         </div>
+                        @if(session()->has('regnoerror'))
+                <p class="text-danger">
+                    {{ session('regnoerror') }}
+                </p>
+                @endif
                         </div>
                     <div class=" form-group">
 
@@ -105,6 +110,11 @@
 
                         <input type="password" class=" form-control" id="cpassword" name="password_confirmation" placeholder="Confirm password...">
                         <div id="error" class=" text-danger"></div>
+                        @if($errors->has('password'))
+                        <p class="text-danger">
+                          **{{$errors->first('password')}}**
+                        </p>
+                        @endif
                     </div>
                     <div class=" form-group">
                         <label>Select Section</label>
