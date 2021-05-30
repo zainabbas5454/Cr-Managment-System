@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClassRearrange;
 use App\Models\Course;
 use App\Models\CrToClass;
 use App\Models\CourseMarks;
@@ -498,6 +499,39 @@ class CrController extends Controller
         {
             return Redirect::back()->with('error','Something Went Wrong');
         }
+     }
+
+     public function getClassSchedule()
+     {
+         //dd('success');
+        $data = ClassRearrange::orderBy('created_at','DESC')->get();
+
+        //dd($data);
+
+        return view('Cr.ViewClassSchedule',compact('data'));
+
+     }
+
+     public function BookRoom($id)
+     {
+        // dd($id);
+        $data =ClassRearrange::find($id);
+       // dd($data);
+        if($data->count()!=0)
+            {
+                //dd('success');
+
+                $data->isBooked = 1;
+                $data->save();
+
+                return Redirect::back()->with('success','Room Booked Successfully');
+            }
+        else
+        {
+            return Redirect::back()->with('error','Something Went Wrong! Try Again Later');
+        }
+
+
      }
 
 

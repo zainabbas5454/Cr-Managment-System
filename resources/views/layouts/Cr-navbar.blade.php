@@ -179,6 +179,12 @@
 
                 </a>
               </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{{route('getClassSchedule')}}">
+                  <span class="menu-title">Book Class Room</span>
+
+                </a>
+              </li>
             <li class="nav-item">
 
               <div class="collapse" id="ui-basic">

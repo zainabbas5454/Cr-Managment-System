@@ -182,6 +182,10 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
         Route::post('PostReplyToStudent',[CrController::class,'PostReplyToStudent'])->name('PostReplyToStudent');
 
         Route::get('deleteStudentMessage/{id}',[CrController::class,'deleteStudentMessage'])->name('deleteStudentMessage');
+
+        Route::get('getClassSchedule',[CrController::class,'getClassSchedule'])->name('getClassSchedule');
+
+        Route::get('BookRoom/{id}',[CrController::class,'BookRoom'])->name('BookRoom');
     });
 
 Route::post('registerstudent',[StudentController::class,'register'])->name('registerstudent');
