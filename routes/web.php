@@ -81,7 +81,7 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
 
 
     Route::middleware([EnsureIsStudent::class , 'auth'])->group(function () {
-        Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+        Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('student_home');
 
         Route::get('Course_Registration',[StudentController::class,'Student_Course_Registration'])->name('Student_Course_Registration');
 
@@ -89,7 +89,7 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
 
         Route::post('Student_Post_Registration',[StudentController::class,'Student_Post_Registration'])->name('Student_Post_Registration');
 
-        Route::get('home',[StudentController::class,'Student_Registered_Courses']);
+        Route::get('/home',[StudentController::class,'Student_Registered_Courses']);
 
         Route::get('DeleteRegistarion/{id}',[StudentController::class,'Student_Delete_Registration'])->name('Student_Delete_Registration');
 
@@ -189,6 +189,7 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
     });
 
 Route::post('registerstudent',[StudentController::class,'register'])->name('registerstudent');
+//Event::listen(, listener, priority);
 
 Route::get('/', function () {
     return view('front');
@@ -207,6 +208,7 @@ Route::view('student_register', 'student_register')->name('student.register');
 // Route::view('coordinatorlogin', 'cologin');
 Route::view('coordinator_registration','auth.coregister');
 
-Auth::routes();
+Auth::routes(['verify' => true]);
+//Auth::routes();
 
 

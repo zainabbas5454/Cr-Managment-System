@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Models\Role;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -48,5 +49,9 @@ class User extends Authenticatable
     public function Course()
     {
         return $this->belongsToMany(Course::class, 'course_registrations','user_id','course_id');
+    }
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
     }
 }

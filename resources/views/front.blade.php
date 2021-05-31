@@ -20,7 +20,7 @@
 </div>
 <div class="container mt-5">
     <button class="btn btn1"><a href="{{route('login')}}" style="text-decoration: none;">Student Console</a></button>
-    <button class="btn btn2"><a href="{{route('coordinatelogin')}}" style="text-decoration: none;">Adminisrator Console</a></button>
+    <button class="btn btn2"><a href="{{route('coordinatelogin')}}" style="text-decoration: none;">Administrator Console</a></button>
 
 
   </div>

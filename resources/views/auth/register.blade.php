@@ -43,6 +43,9 @@
 
                 <h3 class=" text-center my-3">Register</h3>
                 <hr>
+                @if(session()->has('signup'))
+                <div class = "alert alert-success">{{ session('signup') }}</div>
+                @endif
                 <form method="POST" action="{{ route('registerstudent') }}" class="p-3">
                     @csrf
                     <input type="hidden" name="role_id" value="3">

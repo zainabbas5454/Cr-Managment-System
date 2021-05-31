@@ -15,6 +15,7 @@ use App\Models\CourseRegistration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Redirect;
 
 class StudentController extends Controller
@@ -327,9 +328,18 @@ class StudentController extends Controller
             return Redirect::back()->with('regnoerror','This reg no already exists');
         }
         else{
-            User::create($user);
+            // $e =event(new Registered($data));
+            // dd($e);
+           $e1= User::create($user);
+
+            //dd($user);
+            $e1->sendEmailVerificationNotification();
+            //dd($e1);
             Auth::attempt($data->only('email','password'));
-            return redirect()->route('home');
+
+
+            return Redirect::back()->with('signup',"Your Account Created Successfully! Kindly use Email to login to Portal");
+
         }
 
 
