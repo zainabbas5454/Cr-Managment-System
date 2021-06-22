@@ -4,6 +4,11 @@
 
 @section('content')
     <h1 style="text-align: center">Dashboard</h1>
+    @if(Auth::user()->email_verified_at == null)
+    <div class="alert alert-danger">Your Email is not Verified yet! Kindly verify your Email  <a class="btn btn-danger btn-sm" style="float: right;" href="{{route('resendEmail') }}">Resend Email Verification Link</a></div>
+    @endif
+
+
     @if(Session::has('message'))
     <div class="alert alert-success">{{session('message')}}</div>
     @endif

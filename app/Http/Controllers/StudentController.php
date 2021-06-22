@@ -344,5 +344,14 @@ class StudentController extends Controller
 
 
 
+
 }
+// public function resend_Verification()
+// {  // dd($user);
+//     //dd($req->all());
+
+//     $e1=user()->sendEmailVerificationNotification();
+//     dd($e1);
+//     return back()->with('message', 'Verification link sent!');
+// }
 }

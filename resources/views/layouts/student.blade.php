@@ -43,8 +43,8 @@
                                     <h5 class="mb-0 text-white nav-user-name">{{ Auth::user()->name }} </h5>
                                     <span class="status"></span><span class="ml-2">Available</span>
                                 </div>
-                                <a class="dropdown-item" href="#" >Account</a>
-                                <a class="dropdown-item" href="#">Setting</a>
+                                <a class="dropdown-item" href="#"  style="display: none;">Account</a>
+                                <a class="dropdown-item" href="#" style="display: none;">Setting</a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
                                               document.getElementById('logout-form').submit();">

@@ -11,6 +11,7 @@ use App\Models\Course;
 use Database\Seeders\CoordinatorSeeder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -186,10 +187,19 @@ Route::middleware([EnsureIsCoordinator::class , 'auth'])->group(function () {
         Route::get('getClassSchedule',[CrController::class,'getClassSchedule'])->name('getClassSchedule');
 
         Route::get('BookRoom/{id}',[CrController::class,'BookRoom'])->name('BookRoom');
+
+
     });
+
+   // Route::get('resenrEmail/{user}',[StudentController::class,'resend_Verification'])->name('resendEmail');
 
 Route::post('registerstudent',[StudentController::class,'register'])->name('registerstudent');
 //Event::listen(, listener, priority);
+Route::get('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('resendEmail');
 
 Route::get('/', function () {
     return view('front');

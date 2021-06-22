@@ -27,7 +27,18 @@ class VerificationController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
-
+    protected function redirectTo()
+    {
+        if (auth()->user()->role->name == 'student') {
+            return '/home';
+        }
+        elseif(auth()->user()->role->name=='coordinator'){
+            return '/coordinatorhome';
+        }
+        elseif(auth()->user()->role->name=='cr'){
+            return '/crhome';
+        }
+    }
     /**
      * Create a new controller instance.
      *
